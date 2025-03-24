@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body th:fragment="navbar(activeLink)">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+    <a class="navbar-brand" href="/">Fruit Shop</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active" >
+                <a class="nav-link"  th:href="@{/}" th:text="#{nav_bar_home}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/about}" th:text="#{nav_bar_about}">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/contact}" th:text="#{nav_bar_contact}">Contact</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/location}" th:text="#{nav_bar_location}">Location</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/product}" th:text="#{nav_bar_product}">Product</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" th:classappend="${activeLink == 'login'}? 'active'"  th:href="@{/users/login}" th:text="#{nav_bar_login}">Login</a>
+            </li>
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" th:classappend="${activeLink == 'register'}? 'active'"  th:href="@{/users/register}" th:text="#{nav_bar_login_register}">Register</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{/shopping-cart}">Shopping Cart</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <div class="logged-user" text="Welcome, Gosho"></div>
+                <form th:method="post" th:action="@{/users/logout}">
+                    <input class="btn btn-link" type="submit" value="Logout"/>
+                </form>
+            </li>
+
+            <li class="nav-item">
+                <form th:method="get">
+                    <label class="text-white" for="lang" th:text="#{nav_bar_language}">Language</label>
+                    <select class="form-select btn-secondary rounded"
+                            id="lang"
+                            name="lang"
+                            onchange="this.form.submit()">
+                        <option value="en_US" th:selected="${#locale.toString()} == 'en_US'">English</option>
+                        <option value="bg_BG" th:selected="${#locale.toString()} == 'bg_BG'">Български</option>
+                    </select>
+                </form>
+
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

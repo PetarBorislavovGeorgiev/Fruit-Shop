@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<div th:insert="~{fragments/background}"></div>
+<head th:replace="~{fragments/head}"></head>
+<body>
+<div th:replace="~{fragments/navbar}"></div>
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-7">
+            <div class="profile-card p-3 py-4">
+                <div class="text-center mt-3" th:object="${user}">
+                    <h1 class="mt-4 mb-0" id="fullName">Full name</h1>
+                    <h2 th:text="${user.getFullName()}">Full name</h2>
+                    <h1 class="mt-4 mb-0" id="email">Email</h1>
+                    <h2 th:text="${user.email}">email</h2>
+                    <h1 class="mt-4 mb-0" id="orders" style="padding-bottom: 4%"><a th:href="@{/users/details/orders}">My orders</a></h1>
+
+                    <div class="buttons">
+                        <button class="read-more-btn"><a href="/users/edit">Edit</a></button>
+                        <button class="read-more-btn"><a href="/">Home</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

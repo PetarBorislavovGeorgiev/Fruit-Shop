@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/background}"></div>
+<head th:replace="~{fragments/head}"></head>
+
+<body>
+<div th:replace="~{fragments/navbar}"></div>
+<div class="laptop">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="titlepage">
+                    <p>OOPS! Error found!</p>
+                    <a class="read_more" href="/">Home</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="laptop_box">
+                    <figure><img src="../../images/oops.gif" alt="OOPS"/></figure>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+</html>
