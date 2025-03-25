@@ -7,7 +7,9 @@ import bg.softuni.fruitshop.user.model.User;
 import bg.softuni.fruitshop.user.model.UserRole;
 import bg.softuni.fruitshop.user.repository.UserRepository;
 import bg.softuni.fruitshop.web.dto.RegisterRequest;
+import bg.softuni.fruitshop.web.dto.UserEditRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +31,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -49,6 +52,20 @@ public class UserService implements UserDetailsService {
         log.info("Successfully create new user account for username [%s] and id [%s]".formatted(user.getUsername(), user.getId()));
 
         return user;
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    public void editUserDetails(UUID userId, UserEditRequest userEditRequest) {
+
+        User user = getById(userId);
+
+        user.setFirstName(userEditRequest.getFirstName());
+        user.setLastName(userEditRequest.getLastName());
+        user.setEmail(userEditRequest.getEmail());
+        user.setProfilePicture(userEditRequest.getProfilePicture());
+
+
+        userRepository.save(user);
     }
 
     private User initializeUser(RegisterRequest registerRequest) {
