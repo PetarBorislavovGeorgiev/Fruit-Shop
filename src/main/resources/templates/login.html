@@ -7,17 +7,22 @@
 <div th:replace="~{fragments/navbar::navbar(activeLink=${'login'})}"></div>
 
 <div class="container mt-5">
-    <h2 th:text="#{login_title}">Login</h2>
-    <form th:method="post" th:action="@{/users/login}">
-        <div class="form-group" >
-            <label for="email" th:text="#{login_enter_email}">Email address:</label>
-            <input type="email" class="form-control col-md-3" id="email" placeholder="Enter email" name="email">
-        </div>
-        <div class="form-group">
-            <label for="password" th:text="#{login_enter_password}">Password:</label>
-            <input type="password" class="form-control col-md-3" id="password" placeholder="Enter password" name="password">
-        </div>
-        <button type="submit" class="btn btn-primary" th:text="#{login_submit}">Submit</button>
+    <h2>Login</h2>
+    <form class="form" th:action="@{/login}" th:method="POST" th:object="${loginRequest}">
+
+        <h3>Login Here</h3>
+
+        <label for="username">Username</label>
+        <input type="text" placeholder="Username" id="username" th:field="*{username}" required>
+
+        <label for="password">Password</label>
+        <input type="password" placeholder="Password" id="password" th:field="*{password}" required>
+        <p class="alert-warning" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
+        <button type="submit">Log In</button>
+
+        <p class="form-already">Don't have an account? <a href="/register">Register now</a>!</p>
+
     </form>
 </div>
 

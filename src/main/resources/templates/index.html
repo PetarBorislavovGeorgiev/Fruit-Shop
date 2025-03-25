@@ -6,35 +6,16 @@
 <div th:replace="~{fragments/navbar}"></div>
 <div class="container" >
 
-    <h1 th:text="#{home_title}">Welcome to Fruit Shop!</h1>
-    <p th:text="#{home_paragraph}">Your one-stop shop for fresh fruits.</p>
+    <h1>Welcome to Fruit Shop!</h1>
+    <p>Your one-stop shop for fresh fruits.</p>
     <th:block th:text="${welcomeMessage}"></th:block>!
 </div>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="text-center" th:text="#{home_current_weather}">Current Weather</h1>
-        </div>
-    </div>
-
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title text-center" th:text="#{home_timezone}">Timezone</h2>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group">
-                        <li class="list-group-item" th:each="time, iterStat : ${weatherData.time}">
-                            <strong th:text="#{home_time}">Time</strong> <span th:text="${time}"></span>,
-                            <strong th:text="#{home_temperature}">Temperature</strong> <span th:text="${weatherData.temperature[iterStat.index]}"></span> °C
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="header-inner">
+    <nav class="nav">
+        <a th:href="@{/login}" class="button login">Login</a>
+        <a th:href="@{/register}" class="button register">Register</a>
+    </nav>
 </div>
 
 <div th:replace="~{fragments/footer}"></div>

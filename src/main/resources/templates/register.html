@@ -6,44 +6,25 @@
 <body>
 <div th:replace="~{fragments/navbar}"></div>
 <div class="container mt-5" >
-  <h2 th:text="#{register_title}">Register</h2>
-  <form class="form-group" th:method="post" th:action="@{/users/register}" th:object="${registerDTO}">
-    <div>
-      <label th:for="firstName" class="col-sm-2 col-form-label" th:text="#{register_first_name}">First Name:</label>
-      <input type="text" th:field="*{firstName}" required minlength="2" maxlength="20" />
-      <small th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger">First name error message</small>
-    </div>
-    <div>
-      <label th:for="middleName" class="col-sm-2 col-form-label" th:text="#{register_middle_name}">Middle Name:</label>
-      <input type="text" th:field="*{middleName}" required minlength="2" maxlength="20" />
-    </div>
-    <div>
-      <label th:for="lastName" class="col-sm-2 col-form-label" th:text="#{register_last_name}">Last Name:</label>
-      <input type="text" th:field="*{lastName}" required minlength="2" maxlength="20" />
-      <small th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger">Last name error message</small>
-    </div>
-    <div>
-      <label th:for="email" class="col-sm-2 col-form-label" th:text="#{register_email}">Email:</label>
-      <input type="email" id="email" th:field="*{email}" required />
-      <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger">Email error message</small>
-    </div>
-    <div>
-      <label th:for="password" class="col-sm-2 col-form-label" th:text="#{register_password}">Password:</label>
-      <input type="password"  th:field="*{password}" required minlength="8" maxlength="20" />
-      <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger">Password error message</small>
-    </div>
-    <div>
-      <label th:for="confirmPassword" class="col-sm-2 col-form-label" th:text="#{register_confirm_password}">Confirm Password:</label>
-      <input type="password" th:field="*{confirmPassword}" required minlength="4" maxlength="20" />
-      <small th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="text-danger">Confirm password error message</small>
-    </div>
-    <div>
-      <label th:for="phoneNumber" class="col-sm-2 col-form-label" th:text="#{register_phone_number}">Phone Number:</label>
-      <input type="text"  th:field="*{phoneNumber}" />
-    </div>
-    <div class="col-sm-9 offset-sm-auto">
-      <button type="submit" class="btn btn-primary" th:text="#{register_button_register}">Register</button>
-    </div>
+
+
+
+  <form class="form" th:action="@{/register}" th:method="POST" th:object="${registerRequest}">
+
+
+    <h3>Register Here</h3>
+
+    <label for="username">Username</label>
+    <input type="text" placeholder="Username" id="username" th:field="*{username}" required>
+    <p class="alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+    <p class="alert-warning" th:text="${usernameAlreadyExistMessage}"></p>
+
+    <label for="password">Password</label>
+    <input type="password" placeholder="Password" id="password" th:field="*{password}" required>
+    <p class="alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+    <p class="form-already">Already have an account? <a href="/login">Login</a>!</p>
   </form>
 
 
