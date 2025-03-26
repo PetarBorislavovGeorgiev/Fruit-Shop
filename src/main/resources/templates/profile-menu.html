@@ -1,70 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"><head>
-    <meta charset="UTF-8">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/css/nav-side-bar.css">
-    <link rel="stylesheet" type="text/css" href="/css/home-common.css">
-    <link rel="stylesheet" type="text/css" href="/css/home.css">
-    <link rel="stylesheet" type="text/css" href="/css/profile-menu.css">
-    <title>Edit Profile</title>
-</head>
-<body>
-<nav>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/background}"></div>
+<head th:replace="~{fragments/head}"></head>
 
-</nav>
-<main>
-    <div class="home-section">
-        <div class="single-section-box profile-menu">
-            <div class="profile-header">
-                <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png' : user.profilePicture}" alt="Profile Picture" class="profile-avatar">
-                <h2 th:text="${user.username}" class="profile-name"></h2>
+<body class="bg-light">
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 bg-white p-4 rounded shadow">
+            <div class="text-center mb-4">
+                <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png' : user.profilePicture}"
+                     alt="Profile Picture"
+                     class="rounded-circle shadow-sm mb-3"
+                     style="width: 120px; height: 120px; object-fit: cover;">
+                <h3 th:text="${user.username}">Username</h3>
+                <p class="text-muted" th:text="'User ID: ' + ${user.id}"></p>
+                <p class="text-muted" th:text="'Last update: ' + ${user.updatedOn}"></p>
             </div>
 
-            <div class="details-section">
-                <div class="details-section-container">
-                    <strong>User id: </strong>
-                    <p th:text="${user.id}"></p>
+            <form th:action="@{'/users/' + ${user.id} + '/profile'}" method="post" th:object="${userEditRequest}">
+                <input type="hidden" name="_method" value="put"/>
+
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" id="firstName" th:field="*{firstName}" class="form-control" placeholder="First Name">
+                    <div class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
                 </div>
-                <div class="details-section-container">
-                    <strong>Last profile update: </strong>
-                    <p th:text="${user.updatedOn}"></p>
+
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" id="lastName" th:field="*{lastName}" class="form-control" placeholder="Last Name">
+                    <div class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
                 </div>
-            </div>
 
-            <form class="form" th:action="@{'/users/' + ${user.id} + '/profile'}" th:method="PUT" th:object="${userEditRequest}">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Email">
+                    <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
 
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" placeholder="First Name" th:field="*{firstName}">
-                <p class="alert-warning" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+                <div class="mb-3">
+                    <label for="profilePicture" class="form-label">Profile Picture URL</label>
+                    <input type="text" id="profilePicture" th:field="*{profilePicture}" class="form-control" placeholder="Image URL">
+                    <div class="text-danger" th:if="${#fields.hasErrors('profilePicture')}" th:errors="*{profilePicture}"></div>
+                </div>
 
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" placeholder="Last Name" th:field="*{lastName}">
-                <p class="alert-warning" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
-
-                <label for="email">Email</label>
-                <input type="text" id="email" placeholder="Email Address" th:field="*{email}">
-                <p class="alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-
-                <label for="profilePicture">Profile Picture URL</label>
-                <input type="text" id="profilePicture" placeholder="Image Link" th:field="*{profilePicture}">
-                <p class="alert-warning" th:if="${#fields.hasErrors('profilePicture')}" th:errors="*{profilePicture}"></p>
-
-                <button class="profile-actions-button">
-                    <p>Save</p>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
+                <button type="submit" class="btn btn-primary w-100">
+                    Save Changes
                 </button>
             </form>
         </div>
     </div>
 </main>
 
-<div class="footer"><p>© 2025 Smart Wallet. All rights reserved.</p></div>
+<div th:replace="~{fragments/footer}"></div>
 
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

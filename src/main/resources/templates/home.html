@@ -7,50 +7,38 @@
 
 <div class="container mt-4">
   <div class="row">
-    <!-- Лява част: Навигация на потребителя -->
-    <div class="home-section">
-      <div class="single-section-box home-profile-information">
-        <div class="profile-header">
-          <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png' : user.profilePicture}" alt="Profile Picture" class="profile-avatar">
-          <h2 class="profile-name" th:text="${user.username}"></h2>
-          <div class="details-section">
-            <div class="details-section-container">
-              <strong>User id: </strong>
-              <p th:text="${user.id}"></p>
-            </div>
-          </div>
+    <!-- Лява част: Профил и навигация -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100 p-3">
+        <div class="text-center">
+          <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png' : user.profilePicture}"
+               alt="Profile Picture"
+               class="rounded-circle mb-3"
+               style="width: 120px; height: 120px; object-fit: cover;">
+          <h4 th:text="${user.username}">Username</h4>
         </div>
-        <div class="profile-info">
-          <div class="details-section-container">
-            <strong>Username: </strong>
-            <p th:text="${user.username}"></p>
-          </div>
-          <div class="details-section-container">
-            <strong>Email: </strong>
-            <p th:text="${#strings.isEmpty(user.email) ? 'Edit your profile and add email' : user.email}"> </p>
-          </div>
-          <div class="details-section-container">
-            <strong>Joined: </strong>
-            <p th:text="${#temporals.format(user.createdOn, 'dd MMM YYYY HH:mm')}"></p>
-          </div>
+
+        <div class="mt-3">
+          <p><strong>User ID:</strong> <span th:text="${user.id}"></span></p>
+          <p><strong>Email:</strong> <span th:text="${#strings.isEmpty(user.email) ? 'Edit your profile and add email' : user.email}"></span></p>
+          <p><strong>Joined:</strong> <span th:text="${#temporals.format(user.createdOn, 'dd MMM YYYY HH:mm')}"></span></p>
         </div>
-        <!--      /users/{id}/profile-->
-        <a th:href="@{'/users/' + ${user.id} + '/profile'}" class="profile-actions-button">
-          <p>Edit Profile</p>
-          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 4h4m0 0v4m0-4-5 5M8 20H4m0 0v-4m0 4 5-5"></path>
+
+        <a th:href="@{'/users/' + ${user.id} + '/profile'}" class="btn btn-outline-primary w-100 mt-3 d-flex justify-content-center align-items-center gap-2">
+          <span>Edit Profile</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+            <path d="M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708l-10 10A.5.5 0 0 1 4.5 14H2a.5.5 0 0 1-.5-.5V11.5a.5.5 0 0 1 .146-.354l10-10z"/>
           </svg>
         </a>
       </div>
+    </div>
 
     <!-- Дясна част: Закупени продукти -->
     <div class="col-md-8">
-      <div class="card shadow-sm rounded-3">
+      <div class="card shadow-sm h-100">
         <div class="card-body">
           <h5 class="card-title">Закупени продукти</h5>
-          <p>Тук ще се показват продуктите, които потребителят е закупил.</p>
-
-          <!-- Примерен списък с продукти -->
+          <p class="text-muted">Тук ще се показват продуктите, които потребителят е закупил.</p>
           <ul class="list-group">
             <li class="list-group-item">Продукт 1</li>
             <li class="list-group-item">Продукт 2</li>
@@ -61,8 +49,8 @@
     </div>
   </div>
 </div>
-<div th:replace="~{fragments/footer}"></div>
 
+<div th:replace="~{fragments/footer}"></div>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
