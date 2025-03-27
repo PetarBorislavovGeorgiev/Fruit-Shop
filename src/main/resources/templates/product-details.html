@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/background}"></div>
+<head th:replace="~{fragments/head}"></head>
+
+<body class="bg-light min-vh-100 d-flex flex-column">
+<div th:replace="~{fragments/navbar}"></div>
+
+<main class="container my-5 flex-fill">
+  <div class="card shadow-sm p-4">
+    <h2 class="text-center mb-4" th:text="${product.name}">Product Name</h2>
+    <p><strong>Price:</strong> <span th:text="${product.price}"></span> BGN</p>
+    <p><strong>Category:</strong> <span th:text="${product.category}"></span></p>
+    <a href="/products" class="btn btn-secondary mt-3">← Back to Products</a>
+  </div>
+</main>
+
+<div th:replace="~{fragments/footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

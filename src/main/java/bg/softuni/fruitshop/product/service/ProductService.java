@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,4 +50,16 @@ public class ProductService {
     public void deleteProduct(UUID productId) {
         productRepository.deleteById(productId);
     }
+
+    public ProductResponse getProductById(UUID id) {
+        return productRepository.findById(id)
+                .map(product -> ProductResponse.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .price(product.getPrice())
+                        .category(product.getCategory())
+                        .build())
+                .orElseThrow(() -> new NoSuchElementException("Product not found"));
+    }
+
 }
