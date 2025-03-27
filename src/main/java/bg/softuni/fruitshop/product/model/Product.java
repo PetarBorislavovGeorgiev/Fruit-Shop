@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -31,4 +32,10 @@ public class Product {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CategoryType category;
+
+    @Column(nullable = false)
+    private LocalDateTime createdOn;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedOn;
 }

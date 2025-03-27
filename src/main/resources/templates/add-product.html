@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/background}"></div>
+<head th:replace="~{fragments/head}"></head>
+
+<body class="bg-light min-vh-100 d-flex flex-column">
+<div th:replace="~{fragments/navbar}"></div>
+
+<main class="container my-5 flex-fill">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="p-4 rounded-3 shadow" style="background-color: rgba(255,255,255,0.0); backdrop-filter: blur(5px);">
+                <h2 class="text-center text-white mb-4">Add Product</h2>
+
+                <form th:action="@{/products/add}" th:object="${createProductRequest}" th:method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label text-white">Product Name</label>
+                        <input type="text" th:field="*{name}" class="form-control" id="name" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="price" class="form-label text-white">Price</label>
+                        <input type="number" th:field="*{price}" class="form-control" id="price" step="0.01" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label text-white">Category</label>
+                        <select th:field="*{category}" class="form-select" id="category" required>
+                            <option th:each="cat : ${T(bg.softuni.fruitshop.product.model.CategoryType).values()}"
+                                    th:value="${cat}" th:text="${cat}"></option>
+                        </select>
+                        <div class="text-danger" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Create Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
