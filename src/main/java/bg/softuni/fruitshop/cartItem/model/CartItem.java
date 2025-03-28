@@ -2,6 +2,7 @@ package bg.softuni.fruitshop.cartItem.model;
 
 
 import bg.softuni.fruitshop.product.model.Product;
+import bg.softuni.fruitshop.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,12 @@ public class CartItem {
 
     private long quantity;
 
-    @ManyToOne(optional = false)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
