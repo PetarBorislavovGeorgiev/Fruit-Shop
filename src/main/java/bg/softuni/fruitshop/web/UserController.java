@@ -11,6 +11,7 @@ import bg.softuni.fruitshop.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -106,4 +107,19 @@ public class UserController {
         redirectAttributes.addFlashAttribute("successMessage", "Address added successfully.");
         return "redirect:/users/" + id + "/profile";
     }
+
+    @GetMapping
+    public String allUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "users";
+    }
+
+    @GetMapping("/{id}")
+    public String viewUserDetails(@PathVariable UUID id, Model model) {
+        User user = userService.getUserById(id);
+        model.addAttribute("user", user);
+        return "user-details";
+    }
+
+
 }

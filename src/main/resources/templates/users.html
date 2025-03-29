@@ -1,27 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/background}"></div>
+
 <head th:replace="~{fragments/head}"></head>
+
 <body>
 <div th:replace="~{fragments/navbar}"></div>
-<div class="container mt-5">
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-7">
-            <div class="profile-card p-3 py-4">
-                <div class="text-center mt-3" th:object="${user}">
-                    <h1 class="mt-4 mb-0" id="fullName">Full name</h1>
-                    <h2 th:text="${user.getFullName()}">Full name</h2>
-                    <h1 class="mt-4 mb-0" id="email">Email</h1>
-                    <h2 th:text="${user.email}">email</h2>
-                    <h1 class="mt-4 mb-0" id="orders" style="padding-bottom: 4%"><a th:href="@{/users/details/orders}">My orders</a></h1>
 
-                    <div class="buttons">
-                        <button class="read-more-btn"><a href="/users/edit">Edit</a></button>
-                        <button class="read-more-btn"><a href="/">Home</a></button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">All Registered Users</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center">
+            <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+
+                <!-- Full Name (ако е null -> празно) -->
+                <td th:text="${(user.firstName != null ? user.firstName : '') + ' ' + (user.lastName != null ? user.lastName : '')}">Full Name</td>
+
+                <!-- Email (ако е null -> празно) -->
+                <td th:text="${user.email != null ? user.email : ''}">john@example.com</td>
+
+                <!-- Role (ако е null -> празно) -->
+                <td th:text="${user.role != null ? user.role : ''}">USER</td>
+
+                <td>
+                    <a th:href="@{'/users/' + ${user.id}}" class="btn btn-sm btn-outline-primary">View</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
