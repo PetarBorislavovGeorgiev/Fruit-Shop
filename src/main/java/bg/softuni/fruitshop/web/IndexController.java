@@ -1,5 +1,7 @@
 package bg.softuni.fruitshop.web;
 
+import bg.softuni.fruitshop.order.model.OrderItem;
+import bg.softuni.fruitshop.order.service.OrderItemService;
 import bg.softuni.fruitshop.security.AuthenticationMetadata;
 import bg.softuni.fruitshop.user.model.User;
 import bg.softuni.fruitshop.user.service.UserService;
@@ -15,13 +17,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Controller
 public class IndexController {
     private final UserService userService;
+    private final OrderItemService orderItemService;
 
     @Autowired
-    public IndexController(UserService userService) {
+    public IndexController(UserService userService, OrderItemService orderItemService) {
         this.userService = userService;
+        this.orderItemService = orderItemService;
     }
 
     @GetMapping("/")
@@ -75,7 +81,28 @@ public class IndexController {
         modelAndView.setViewName("home");
         modelAndView.addObject("user", user);
 
+        List<OrderItem> completedOrders = orderItemService.getCompletedOrdersForUser(user.getId());
+        modelAndView.addObject("orders", completedOrders);
+
         return modelAndView;
+    }
+
+    @GetMapping("/about")
+    public String getAboutPage() {
+
+        return "about";
+    }
+
+    @GetMapping("/contact")
+    public String getContactPage() {
+
+        return "contact";
+    }
+
+    @GetMapping("/location")
+    public String getLocationPage() {
+
+        return "location";
     }
 
 }

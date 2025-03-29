@@ -30,8 +30,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                         .failureUrl("/login?error")
                         .permitAll())
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                        .logoutSuccessUrl("/")
+                        .logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true).permitAll()
                 );
 
         return http.build();

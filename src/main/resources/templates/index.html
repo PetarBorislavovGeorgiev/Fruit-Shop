@@ -4,20 +4,10 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <div th:replace="~{fragments/navbar}"></div>
-<div class="container" >
-
+<div class="container d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 60vh;">
     <h1>Welcome to Fruit Shop!</h1>
     <p>Your one-stop shop for fresh fruits.</p>
-    <th:block th:text="${welcomeMessage}"></th:block>!
 </div>
-
-<div class="header-inner">
-    <nav class="nav">
-        <a th:href="@{/login}" class="button login">Login</a>
-        <a th:href="@{/register}" class="button register">Register</a>
-    </nav>
-</div>
-
 <div th:replace="~{fragments/footer}"></div>
 
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
