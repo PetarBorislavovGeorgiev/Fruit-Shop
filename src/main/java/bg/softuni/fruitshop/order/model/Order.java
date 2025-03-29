@@ -32,9 +32,18 @@ public class Order {
     @ManyToOne(optional = false)
     private User customer;
 
-    @ManyToMany
-    private List<CartItem> items;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> items;
 
     @ManyToOne(optional = false)
     private Address address;
+
+
+    @Column(nullable = false)
+    private LocalDateTime createdOn;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedOn;
+
+
 }

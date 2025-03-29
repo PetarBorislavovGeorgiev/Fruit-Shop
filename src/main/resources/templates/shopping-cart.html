@@ -7,8 +7,11 @@
 <div th:replace="~{fragments/navbar}"></div>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4">🛒 My Shopping Cart</h2>
+    <h2 class="text-center mb-4">My Shopping Cart</h2>
 
+    <div th:if="${errorMessage}" class="alert alert-warning" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
     <div th:if="${#lists.isEmpty(cartItems)}">
         <p class="text-center">Your cart is currently empty.</p>
     </div>
@@ -43,6 +46,12 @@
         <div class="text-end mt-3">
             <h5>Total Price: <span th:text="${totalPrice} + ' BGN'">0.00 BGN</span></h5>
         </div>
+
+        <form th:action="@{/cart/checkout}" method="post">
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-primary">Place Order</button>
+            </div>
+        </form>
     </div>
 
     <a href="/products" class="btn btn-outline-primary mt-4">← Continue Shopping</a>

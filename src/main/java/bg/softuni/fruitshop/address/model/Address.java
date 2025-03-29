@@ -1,6 +1,7 @@
 package bg.softuni.fruitshop.address.model;
 
 
+import bg.softuni.fruitshop.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,4 +28,9 @@ public class Address {
 
     @Column(nullable = false)
     private String street;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

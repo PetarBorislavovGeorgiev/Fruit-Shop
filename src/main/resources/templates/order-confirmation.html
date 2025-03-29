@@ -1,17 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div th:insert="~{fragments/background}"></div>
 <head th:replace="~{fragments/head}"></head>
 <body>
+
+<div th:insert="~{fragments/background}"></div>
 <div th:replace="~{fragments/navbar}"></div>
+
 <div class="container mt-5">
-  <h2>Order</h2>
-  <p>Тhe order is successful</p>
+    <h2 class="text-success text-center mb-4">Your order has been placed!</h2>
+
+    <div class="mb-4">
+        <h5>Order Details:</h5>
+        <p><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
+        <p><strong>Date:</strong> <span th:text="${#temporals.format(order.dateCreated, 'dd MMM yyyy HH:mm')}"></span></p>
+        <p><strong>Delivery Address:</strong>
+            <span th:text="${order.address.street + ', ' + order.address.city + ' ' + order.address.zipCode}"></span>
+        </p>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price per unit</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${order.items}">
+            <td th:text="${item.product.name}"></td>
+            <td th:text="${item.price} + ' BGN'"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${item.price.multiply(T(java.math.BigDecimal).valueOf(item.quantity))} + ' BGN'"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="text-end fw-bold fs-5">
+        Total:
+        <span th:text="${total} + ' BGN'"></span>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/products" class="btn btn-outline-primary">← Continue Shopping</a>
+    </div>
 </div>
 
 <div th:replace="~{fragments/footer}"></div>
-
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-
 </body>
 </html>

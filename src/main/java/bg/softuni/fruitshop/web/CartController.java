@@ -3,6 +3,7 @@ package bg.softuni.fruitshop.web;
 
 import bg.softuni.fruitshop.cartItem.model.CartItem;
 import bg.softuni.fruitshop.cartItem.service.CartItemService;
+import bg.softuni.fruitshop.exception.MissingAddressException;
 import bg.softuni.fruitshop.security.AuthenticationMetadata;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -56,4 +58,16 @@ public class CartController {
         cartItemService.removeItem(cartItemId, user.getUserId());
         return "redirect:/cart";
     }
+
+    @PostMapping("/checkout")
+    public String checkout(@AuthenticationPrincipal AuthenticationMetadata user, RedirectAttributes redirectAttributes) {
+        try {
+            cartItemService.placeOrder(user.getUserId());
+            return "redirect:/confirmation";
+        } catch (MissingAddressException exception) {
+            redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
+            return "redirect:/cart";
+        }
+    }
+
 }

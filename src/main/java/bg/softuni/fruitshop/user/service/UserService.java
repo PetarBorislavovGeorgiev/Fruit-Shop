@@ -101,4 +101,10 @@ public class UserService implements UserDetailsService {
 
         return new AuthenticationMetadata(user.getId(), username, user.getPassword(), user.getRole(), user.isActive());
     }
+
+    public User getUserById(UUID id) {
+        Optional<User> user = userRepository.findById(id);
+        user.orElseThrow(() -> new DomainException("User with id [%s] does not exist.".formatted(id)));
+        return user.get();
+    }
 }
