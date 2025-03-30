@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/background}"></div>
+
 <head th:replace="~{fragments/head}"></head>
+
 <body>
 <div th:replace="~{fragments/navbar}"></div>
+
 <div class="container mt-5">
-    <h2>Location</h2>
-    <p>Our location</p>
+    <h2 class="text-center mb-3">Our Location</h2>
+    <p class="text-center mb-4">You can find us here:</p>
+
+    <div class="ratio ratio-16x9">
+        <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243.50682169526365!2d23.34305892468163!3d42.65816270577875!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa850035a35a41%3A0x99d0506c1f5bde7d!2z0J_Qu9C-0LQg0LfQtdC70LXQvdGH0YPQug!5e0!3m2!1sbg!2sbg!4v1743341325733!5m2!1sbg!2sbg"
+                width="600"
+                height="450"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
 </div>
 
 <div th:replace="~{fragments/footer}"></div>
 
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-
 </body>
 </html>
