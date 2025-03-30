@@ -1,6 +1,5 @@
 package bg.softuni.fruitshop.web;
 
-
 import bg.softuni.fruitshop.address.model.Address;
 import bg.softuni.fruitshop.address.repository.AddressRepository;
 import bg.softuni.fruitshop.user.model.User;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @Controller
@@ -33,16 +33,21 @@ public class UserController {
     }
 
     @GetMapping("/{id}/profile")
-    public ModelAndView getProfileMenu(@PathVariable UUID id) {
+    public ModelAndView getProfileMenu(@PathVariable UUID id, Principal principal) {
+        User currentUser = userService.findByUsername(principal.getName());
+
+        if (!currentUser.getRole().name().equals("ADMIN") && !currentUser.getId().equals(id)) {
+            return new ModelAndView("redirect:/access-denied");
+        }
+
         ModelAndView modelAndView = new ModelAndView("profile-menu");
 
         User user = userService.getById(id);
-
         UserEditRequest userEditRequest = DtoMapper.mapUserToUserEditRequest(user);
+
         modelAndView.addObject("userEditRequest", userEditRequest);
 
         AddAddressRequest addressForm;
-
         if (!user.getAddresses().isEmpty()) {
             Address address = user.getAddresses().iterator().next();
 
@@ -64,7 +69,14 @@ public class UserController {
     public ModelAndView updateUserProfile(
             @PathVariable UUID id,
             @Valid @ModelAttribute("userEditRequest") UserEditRequest userEditRequest,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            Principal principal) {
+
+        User currentUser = userService.findByUsername(principal.getName());
+
+        if (!currentUser.getRole().name().equals("ADMIN") && !currentUser.getId().equals(id)) {
+            return new ModelAndView("redirect:/access-denied");
+        }
 
         ModelAndView modelAndView = new ModelAndView();
 
@@ -121,5 +133,40 @@ public class UserController {
         return "user-details";
     }
 
+    @GetMapping("/edit/{id}")
+    public String editUserFormAdmin(@PathVariable UUID id, Model model) {
+        User user = userService.getUserById(id);
+        model.addAttribute("user", user);
+        return "edit-user";
+    }
 
+    @PostMapping("/edit/{id}")
+    public String updateUserAdmin(@PathVariable UUID id, @ModelAttribute("user") User updatedUser) {
+        userService.updateUserFromAdmin(id, updatedUser);
+        return "redirect:/users/" + id;
+    }
+
+    @PostMapping("/deactivate/{id}")
+    public String deactivateUser(@PathVariable UUID id, Principal principal) {
+        User currentUser = userService.findByUsername(principal.getName());
+
+        if (!currentUser.getRole().name().equals("ADMIN") && !currentUser.getId().equals(id)) {
+            return "redirect:/access-denied";
+        }
+
+        userService.deactivateUser(id);
+        return "redirect:/users";
+    }
+
+    @PostMapping("/activate/{id}")
+    public String activateUser(@PathVariable UUID id, Principal principal) {
+        User currentUser = userService.findByUsername(principal.getName());
+
+        if (!currentUser.getRole().name().equals("ADMIN") && !currentUser.getId().equals(id)) {
+            return "redirect:/access-denied";
+        }
+
+        userService.activateUser(id);
+        return "redirect:/users";
+    }
 }

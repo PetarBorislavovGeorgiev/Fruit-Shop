@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"></head>
+<body>
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container mt-5 text-center">
+  <h1 class="text-danger">Access Denied</h1>
+  <p>You do not have permission to access this page.</p>
+  <a class="btn btn-primary" th:href="@{/}">Return Home</a>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

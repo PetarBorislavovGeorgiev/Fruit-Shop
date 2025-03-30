@@ -107,4 +107,39 @@ public class UserService implements UserDetailsService {
         user.orElseThrow(() -> new DomainException("User with id [%s] does not exist.".formatted(id)));
         return user.get();
     }
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    }
+
+
+    public void updateUserFromAdmin(UUID id, User updatedData) {
+        User existingUser = getUserById(id);
+
+        existingUser.setFirstName(updatedData.getFirstName());
+        existingUser.setLastName(updatedData.getLastName());
+        existingUser.setEmail(updatedData.getEmail());
+        existingUser.setUsername(updatedData.getUsername());
+        existingUser.setRole(updatedData.getRole());
+        existingUser.setActive(updatedData.isActive());
+        existingUser.setUpdatedOn(LocalDateTime.now());
+
+        userRepository.save(existingUser);
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    public void deactivateUser(UUID userId) {
+        User user = getUserById(userId);
+        user.setActive(false);
+        user.setUpdatedOn(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    public void activateUser(UUID userId) {
+        User user = getUserById(userId);
+        user.setActive(true);
+        user.setUpdatedOn(LocalDateTime.now());
+        userRepository.save(user);
+    }
 }

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/background}"></div>
 
 <head th:replace="~{fragments/head}"></head>
@@ -9,40 +8,72 @@
 <div th:replace="~{fragments/navbar}"></div>
 
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="profile-card p-3 py-4">
-                <div class="text-center mt-3">
-                    <h1 class="mt-4 mb-0" id="fullName">Full Name</h1>
-                    <h2 th:text="${user.firstName + ' ' + user.lastName}">Full Name</h2>
+    <h2 class="text-center mb-4">User Details</h2>
 
-                    <h1 class="mt-4 mb-0" id="email">Email</h1>
-                    <h2 th:text="${user.email}"></h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                <tr>
+                    <th>ID</th>
+                    <td th:text="${user.id}">ID</td>
+                </tr>
+                <tr>
+                    <th>First Name</th>
+                    <td th:text="${user.firstName ?: ''}">First Name</td>
+                </tr>
+                <tr>
+                    <th>Last Name</th>
+                    <td th:text="${user.lastName ?: ''}">Last Name</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td th:text="${user.email ?: ''}">Email</td>
+                </tr>
+                <tr>
+                    <th>Username</th>
+                    <td th:text="${user.username ?: ''}">Username</td>
+                </tr>
+                <tr>
+                    <th>Role</th>
+                    <td th:text="${user.role}">Role</td>
+                </tr>
+                <tr>
+                    <th>Active</th>
+                    <td th:text="${user.active ? 'Yes' : 'No'}">Active</td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td th:text="${#temporals.format(user.createdOn, 'yyyy-MM-dd HH:mm')}">Created Date</td>
+                </tr>
+                <tr>
+                    <th>Last Updated</th>
+                    <td th:text="${#temporals.format(user.updatedOn, 'yyyy-MM-dd HH:mm')}">Updated Date</td>
+                </tr>
+                </tbody>
+            </table>
 
-                    <h1 class="mt-4 mb-0" id="role">Role</h1>
-                    <h2 th:text="${user.role}"></h2>
+            <div class="d-flex justify-content-end gap-2">
+                <a th:href="@{'/users/edit/' + ${user.id}}" class="btn btn-outline-primary">Edit</a>
 
-                    <h1 class="mt-4 mb-0" id="orders" style="padding-bottom: 4%">
-                        <a th:href="@{/users/details/orders}">My Orders</a>
-                    </h1>
+                <form th:if="${user.active}" th:action="@{'/users/deactivate/' + ${user.id}}" method="post"
+                      onsubmit="return confirm('Are you sure you want to deactivate this user?');"
+                      class="d-inline">
+                    <button type="submit" class="btn btn-outline-danger">Deactivate</button>
+                </form>
 
-                    <div class="buttons">
-                        <button class="read-more-btn">
-                            <a th:href="@{'/users/edit/' + ${user.id}}">Edit</a>
-                        </button>
-                        <button class="read-more-btn">
-                            <a href="/">Home</a>
-                        </button>
-                    </div>
-                </div>
+                <form th:unless="${user.active}" th:action="@{'/users/activate/' + ${user.id}}" method="post"
+                      class="d-inline">
+                    <button type="submit" class="btn btn-outline-success">Activate</button>
+                </form>
+
+                <a th:href="@{/users}" class="btn btn-outline-secondary">Back to Users</a>
             </div>
         </div>
     </div>
 </div>
 
 <div th:replace="~{fragments/footer}"></div>
-
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-
 </body>
 </html>

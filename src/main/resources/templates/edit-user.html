@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/background}"></div>
+
+<head th:replace="~{fragments/head}"></head>
+
+<body>
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Edit User</h2>
+
+    <form th:action="@{'/users/edit/' + ${user.id}}" method="post" th:object="${user}" class="row g-3">
+        <div class="col-md-6">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" th:field="*{firstName}" class="form-control" id="firstName" required>
+        </div>
+
+        <div class="col-md-6">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" th:field="*{lastName}" class="form-control" id="lastName" required>
+        </div>
+
+        <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" th:field="*{email}" class="form-control" id="email">
+        </div>
+
+        <div class="col-md-6">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" th:field="*{username}" class="form-control" id="username" required>
+        </div>
+
+        <div class="col-md-6">
+            <label for="role" class="form-label">Role</label>
+            <select th:field="*{role}" class="form-select" id="role">
+                <option value="USER">USER</option>
+                <option value="ADMIN">ADMIN</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label for="active" class="form-label">Active</label>
+            <select th:field="*{active}" class="form-select" id="active">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+        </div>
+
+        <div class="col-12 d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-success">Save</button>
+            <a th:href="@{/users}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
