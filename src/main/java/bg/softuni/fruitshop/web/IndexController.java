@@ -1,5 +1,6 @@
 package bg.softuni.fruitshop.web;
 
+import bg.softuni.fruitshop.order.model.Order;
 import bg.softuni.fruitshop.order.model.OrderItem;
 import bg.softuni.fruitshop.order.service.OrderItemService;
 import bg.softuni.fruitshop.security.AuthenticationMetadata;
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class IndexController {
@@ -81,8 +85,18 @@ public class IndexController {
         modelAndView.setViewName("home");
         modelAndView.addObject("user", user);
 
-        List<OrderItem> completedOrders = orderItemService.getCompletedOrdersForUser(user.getId());
-        modelAndView.addObject("orders", completedOrders);
+        Map<Order, List<OrderItem>> groupedOrdersForUser = orderItemService.getGroupedOrdersForUser(user.getId());
+
+        Map<Order, BigDecimal> orderTotals = new LinkedHashMap<>();
+
+        groupedOrdersForUser.forEach((order, items) -> {
+            BigDecimal sum = items.stream()
+                    .map(OrderItem::getPrice)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            orderTotals.put(order, sum);
+        });
+        modelAndView.addObject("groupedOrders", groupedOrdersForUser);
+        modelAndView.addObject("orderTotals", orderTotals);
 
         return modelAndView;
     }

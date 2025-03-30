@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/background}"></div>
+<head th:replace="~{fragments/head}"></head>
+<body>
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">All Orders</h2>
+
+  <div th:each="entry : ${groupedOrders}">
+    <div class="mt-4">
+      <h5>
+        <span class="fw-bold">Order ID:</span>
+        <span th:text="${entry.key.id}"></span> |
+        <span class="fw-bold">Customer:</span>
+        <span th:text="${entry.key.customer.username}"></span> |
+        <span class="fw-bold">Date:</span>
+        <span th:text="${#temporals.format(entry.key.createdOn, 'yyyy-MM-dd HH:mm')}"></span>
+      </h5>
+
+      <table class="table table-bordered table-hover text-center mt-2">
+        <thead class="table-light">
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price (лв)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${entry.value}">
+          <td th:text="${item.product.name}">Product</td>
+          <td th:text="${item.quantity}">Qty</td>
+          <td th:text="${item.price}">Price</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -8,8 +8,9 @@
 <div class="container mt-4">
   <div class="row">
 
+
     <div class="col-md-4 d-flex flex-column">
-      <div class="card shadow-sm h-100 p-3 d-flex flex-column justify-content-between">
+      <div class="card shadow-sm p-3 mb-4 d-flex flex-column justify-content-between">
         <div>
           <div class="text-center">
             <img th:src="${#strings.isEmpty(user.profilePicture) ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png' : user.profilePicture}"
@@ -33,30 +34,41 @@
             </svg>
           </a>
         </div>
-
       </div>
     </div>
+
+
 
     <div class="col-md-8">
       <div class="card shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title">Закупени продукти</h5>
-          <ul class="list-group">
-            <li class="list-group-item text-center text-muted" th:if="${#lists.isEmpty(orders)}">
-              Нямате завършени поръчки.
-            </li>
-            <li class="list-group-item" th:each="orderItem : ${orders}">
-              <div class="d-flex justify-content-between">
-                <div>
-                  <strong th:text="${orderItem.product.name}">Име на продукт</strong><br>
-                  <small>Количество: <span th:text="${orderItem.quantity}"></span></small>
+          <h5 class="card-title">Orders</h5>
+
+          <div th:each="entry : ${groupedOrders}">
+            <h6 class="mt-4">Order #<span th:text="${entry.key.id}"></span> |
+              Date: <span th:text="${#temporals.format(entry.key.createdOn, 'yyyy-MM-dd HH:mm')}"></span>
+            </h6>
+
+            <ul class="list-group mb-3" th:with="total=0.0">
+              <li class="list-group-item"
+                  th:each="item : ${entry.value}"
+                  th:with="total=${total + item.price}">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong th:text="${item.product.name}">Product name</strong><br>
+                    <small>Quantity: <span th:text="${item.quantity}"></span></small>
+                  </div>
+                  <div class="text-end">
+                    <span th:text="${item.price} + ' лв.'">0.00 лв.</span>
+                  </div>
                 </div>
-                <div class="text-end">
-                  <span th:text="${orderItem.price} + ' лв.'">0.00 лв.</span>
-                </div>
-              </div>
-            </li>
-          </ul>
+              </li>
+
+              <li class="list-group-item list-group-item-secondary text-end fw-bold">
+                Total: <span th:text="${orderTotals[entry.key]} + ' лв.'">0.00 лв.</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
