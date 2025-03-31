@@ -6,12 +6,14 @@ import bg.softuni.fruitshop.order.service.OrderItemService;
 import bg.softuni.fruitshop.security.AuthenticationMetadata;
 import bg.softuni.fruitshop.user.model.User;
 import bg.softuni.fruitshop.user.service.UserService;
+import bg.softuni.fruitshop.weather.service.WeatherService;
 import bg.softuni.fruitshop.web.dto.LoginRequest;
 import bg.softuni.fruitshop.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,15 +32,36 @@ import java.util.Map;
 public class IndexController {
     private final UserService userService;
     private final OrderItemService orderItemService;
+    private final WeatherService weatherService;
 
     @Autowired
-    public IndexController(UserService userService, OrderItemService orderItemService) {
+    public IndexController(UserService userService, OrderItemService orderItemService, WeatherService weatherService) {
         this.userService = userService;
         this.orderItemService = orderItemService;
+        this.weatherService = weatherService;
     }
 
     @GetMapping("/")
-    public String getIndexPage() {
+    public String getIndexPage(Model model) {
+
+        weatherService.getCurrentHourWeather().ifPresent(currentWeather -> {
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy");
+
+
+            List<String> mutableTimeList = new ArrayList<>(currentWeather.getTime());
+
+
+            for (int i = 0; i < mutableTimeList.size(); i++) {
+                String originalTime = mutableTimeList.get(i);
+                LocalDateTime parsedTime = LocalDateTime.parse(originalTime);
+                String formattedTime = parsedTime.format(formatter);
+                mutableTimeList.set(i, formattedTime);
+            }
+
+            currentWeather.setTime(mutableTimeList);
+            model.addAttribute("weatherData", currentWeather);
+        });
 
         return "index";
     }

@@ -4,12 +4,50 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <div th:replace="~{fragments/navbar}"></div>
-<div class="container d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 60vh;">
-    <h1>Welcome to Fruit Shop!</h1>
-    <p>Your one-stop shop for fresh fruits.</p>
-</div>
-<div th:replace="~{fragments/footer}"></div>
 
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-3">🍓 Welcome to Fruit Shop!</h1>
+            <p class="lead mb-4">Your one-stop shop for the freshest and juiciest fruits.</p>
+
+            <a th:href="@{/products}" class="btn btn-success btn-lg px-4 py-2">
+                <i class="bi bi-basket-fill me-2"></i> Browse Products
+            </a>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-5" th:if="${weatherData != null}">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-info">
+                <div class="card-header bg-info text-white text-center">
+                    <h5 class="mb-0">🌤️ Weather Forecast Sofia</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Time</th>
+                                <th>Temperature (°C)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="i : ${#numbers.sequence(0, weatherData.time.size() - 1)}">
+                                <td th:text="${weatherData.time[i]}">Time</td>
+                                <td th:text="${weatherData.temperature[i]}">Temp</td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
