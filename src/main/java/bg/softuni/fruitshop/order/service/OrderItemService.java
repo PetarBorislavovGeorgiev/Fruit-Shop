@@ -1,5 +1,6 @@
 package bg.softuni.fruitshop.order.service;
 
+import bg.softuni.fruitshop.notification.client.NotificationClient;
 import bg.softuni.fruitshop.order.model.Order;
 import bg.softuni.fruitshop.order.model.OrderItem;
 import bg.softuni.fruitshop.order.repository.OrderItemRepository;
@@ -18,7 +19,7 @@ public class OrderItemService {
     private final OrderItemRepository orderItemRepository;
 
     @Autowired
-    public OrderItemService(OrderItemRepository orderItemRepository) {
+    public OrderItemService(OrderItemRepository orderItemRepository, NotificationClient notificationClient) {
         this.orderItemRepository = orderItemRepository;
     }
 

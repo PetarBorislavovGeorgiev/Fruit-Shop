@@ -2,6 +2,7 @@ package bg.softuni.fruitshop.user.service;
 
 import bg.softuni.fruitshop.exception.DomainException;
 import bg.softuni.fruitshop.exception.UsernameAlreadyExistException;
+import bg.softuni.fruitshop.notification.service.NotificationService;
 import bg.softuni.fruitshop.security.AuthenticationMetadata;
 import bg.softuni.fruitshop.user.model.User;
 import bg.softuni.fruitshop.user.model.UserRole;
@@ -30,11 +31,13 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationService notificationService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, NotificationService notificationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.notificationService = notificationService;
     }
 
 
@@ -48,6 +51,7 @@ public class UserService implements UserDetailsService {
         }
 
         User user = userRepository.save(initializeUser(registerRequest));
+        notificationService.saveNotificationPreference(user.getId(), false, null);
 
         log.info("Successfully create new user account for username [%s] and id [%s]".formatted(user.getUsername(), user.getId()));
 

@@ -4,6 +4,9 @@ import bg.softuni.fruitshop.address.model.Address;
 import bg.softuni.fruitshop.cartItem.model.CartItem;
 import bg.softuni.fruitshop.cartItem.repository.CartItemRepository;
 import bg.softuni.fruitshop.exception.MissingAddressException;
+import bg.softuni.fruitshop.notification.client.NotificationClient;
+import bg.softuni.fruitshop.notification.client.dto.NotificationRequest;
+import bg.softuni.fruitshop.notification.client.dto.UpsertNotificationPreference;
 import bg.softuni.fruitshop.order.model.Order;
 import bg.softuni.fruitshop.order.model.OrderItem;
 import bg.softuni.fruitshop.order.repository.OrderRepository;
@@ -15,8 +18,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,13 +32,15 @@ public class CartItemService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final NotificationClient notificationClient;
 
     @Autowired
-    public CartItemService(CartItemRepository cartItemRepository, ProductRepository productRepository, UserRepository userRepository, OrderRepository orderRepository) {
+    public CartItemService(CartItemRepository cartItemRepository, ProductRepository productRepository, UserRepository userRepository, OrderRepository orderRepository, NotificationClient notificationClient) {
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
+        this.notificationClient = notificationClient;
     }
 
     @Transactional
@@ -106,6 +113,43 @@ public class CartItemService {
 
         orderRepository.save(order);
         cartItemRepository.deleteAll(cartItems);
+
+        notificationClient.upsertNotificationPreference(
+                UpsertNotificationPreference.builder()
+                        .userId(user.getId())
+                        .notificationEnabled(true)
+                        .type("EMAIL")
+                        .contactInfo(user.getEmail())
+                        .build()
+        );
+
+
+        StringBuilder productDetails = new StringBuilder("Items in your order:\n");
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (OrderItem item : orderItems) {
+            BigDecimal itemTotal = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+            total = total.add(itemTotal);
+            productDetails.append("- ")
+                    .append(item.getProduct().getName())
+                    .append(" x").append(item.getQuantity())
+                    .append(" @ ").append(String.format(Locale.ENGLISH, "%.2f", item.getPrice()))
+                    .append(" BGN\n");
+        }
+        productDetails.append("\n");
+        productDetails.append("Total: ").append(String.format(Locale.ENGLISH, "%.2f", total)).append(" BGN");
+
+
+        notificationClient.sendNotification(
+                NotificationRequest.builder()
+                        .userId(user.getId())
+                        .subject("Thanks for your order!")
+                        .body("Order #" + order.getId() + " placed successfully.\n\n" + productDetails)
+                        .build()
+        );
+
+
     }
 
 }
