@@ -1,1 +1,1 @@
-To start notification you need https://github.com/PetarBorislavovGeorgiev/notification.git
+To start notification functionality you need https://github.com/PetarBorislavovGeorgiev/notification.git
