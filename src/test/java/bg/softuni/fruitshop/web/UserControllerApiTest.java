@@ -188,6 +188,109 @@ public class UserControllerApiTest {
                 .andExpect(redirectedUrl("/access-denied"));
     }
 
+    @Test
+    @WithMockUser(username = "user", roles = {"USER"})
+    void updateUserProfile_shouldRedirect_onValidInput() throws Exception {
+        UUID userId = UUID.randomUUID();
+        User user = User.builder().id(userId).username("user").role(UserRole.USER).build();
+
+        when(userService.findByUsername("user")).thenReturn(user);
+
+        mockMvc.perform(post("/users/" + userId + "/profile")
+                        .with(csrf())
+                        .param("username", "user")
+                        .param("firstName", "Pesho")
+                        .param("lastName", "Pesho")
+                        .param("email", "Pesho@example.com"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/users/" + userId + "/profile"));
+
+        verify(userService).editUserDetails(eq(userId), any());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void addAddress_shouldAddAndRedirect_onValidInput() throws Exception {
+        UUID userId = UUID.randomUUID();
+        User user = User.builder().id(userId).username("admin").addresses(new HashSet<>()).build();
+
+        when(userService.getUserById(userId)).thenReturn(user);
+
+        mockMvc.perform(post("/users/" + userId + "/add-address")
+                        .with(csrf())
+                        .param("city", "Sofia")
+                        .param("street", "Test Street")
+                        .param("zipCode", "1000"))
+                .andExpect(redirectedUrl("/users/" + userId + "/profile"));
+
+        verify(addressRepository).save(any());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void addAddress_shouldRedirectBack_onInvalidInput() throws Exception {
+        UUID userId = UUID.randomUUID();
+
+        mockMvc.perform(post("/users/" + userId + "/add-address")
+                        .with(csrf())
+                        .param("city", "") // invalid field
+                )
+                .andExpect(redirectedUrl("/users/" + userId + "/profile"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void allUsers_shouldReturnUsersPage() throws Exception {
+        mockMvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("users"))
+                .andExpect(model().attributeExists("users"));
+
+        verify(userService).getAllUsers();
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void viewUserDetails_shouldReturnDetailsPage() throws Exception {
+        UUID userId = UUID.randomUUID();
+        User user = User.builder().id(userId).username("admin").build();
+
+        when(userService.getUserById(userId)).thenReturn(user);
+
+        mockMvc.perform(get("/users/" + userId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("user-details"))
+                .andExpect(model().attribute("user", user));
+    }
+
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void editUserFormAdmin_shouldReturnEditForm() throws Exception {
+        UUID userId = UUID.randomUUID();
+        User user = User.builder().id(userId).username("admin").build();
+
+        when(userService.getUserById(userId)).thenReturn(user);
+
+        mockMvc.perform(get("/users/edit/" + userId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("edit-user"))
+                .andExpect(model().attribute("user", user));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void updateUserAdmin_shouldRedirectAfterUpdate() throws Exception {
+        UUID userId = UUID.randomUUID();
+
+        mockMvc.perform(post("/users/edit/" + userId)
+                        .with(csrf())
+                        .param("username", "admin"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/users/" + userId));
+
+        verify(userService).updateUserFromAdmin(eq(userId), any());
+    }
 
 
 
