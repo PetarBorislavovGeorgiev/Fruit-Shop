@@ -7,7 +7,6 @@ import bg.softuni.fruitshop.product.repository.ProductRepository;
 import bg.softuni.fruitshop.product.service.ProductService;
 import bg.softuni.fruitshop.web.dto.CreateProductRequest;
 import bg.softuni.fruitshop.web.dto.ProductResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
