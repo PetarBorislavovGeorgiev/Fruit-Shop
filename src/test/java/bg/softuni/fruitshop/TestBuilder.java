@@ -61,4 +61,12 @@ public class TestBuilder {
                 .build();
     }
 
+    public static Address aTestAddress() {
+        Address address = new Address();
+        address.setCity("Sofia");
+        address.setStreet("Test Street 42");
+        address.setZipCode("1000");
+        return address;
+    }
+
 }
