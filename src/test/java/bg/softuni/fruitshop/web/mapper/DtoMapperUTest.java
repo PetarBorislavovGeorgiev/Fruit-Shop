@@ -16,9 +16,9 @@ public class DtoMapperUTest {
 
 
         User user = User.builder()
-                .firstName("Vik")
-                .lastName("Aleksandrov")
-                .email("vik123@abv.bg")
+                .firstName("Pes")
+                .lastName("Pesho")
+                .email("Pes123@abv.bg")
                 .profilePicture("www.image.com")
                 .build();
 
