@@ -111,7 +111,11 @@ public class IndexController {
         modelAndView.setViewName("home");
         modelAndView.addObject("user", user);
 
-        Map<Order, List<OrderItem>> groupedOrdersForUser = orderItemService.getGroupedOrdersForUser(user.getId());
+        Map<Order, List<OrderItem>> groupedOrdersForUser = new LinkedHashMap<>();
+
+        orderItemService.getGroupedOrdersForUser(user.getId()).entrySet().stream()
+                .sorted((e1, e2) -> e2.getKey().getCreatedOn().compareTo(e1.getKey().getCreatedOn()))
+                .forEachOrdered(e -> groupedOrdersForUser.put(e.getKey(), e.getValue()));
 
         Map<Order, BigDecimal> orderTotals = new LinkedHashMap<>();
 

@@ -1,6 +1,7 @@
 package bg.softuni.fruitshop.web;
 
 
+import bg.softuni.fruitshop.cartItem.service.CartItemService;
 import bg.softuni.fruitshop.exception.UsernameAlreadyExistException;
 import bg.softuni.fruitshop.order.model.Order;
 import bg.softuni.fruitshop.order.model.OrderItem;
@@ -49,6 +50,9 @@ public class IndexControllerApiTest {
 
     @MockitoBean
     private OrderItemService orderItemService;
+
+    @MockitoBean
+    private CartItemService cartItemService;
 
     @Test
     void getRequestToIndexEndpoint_shouldReturnIndexViewWithWeatherData() throws Exception {

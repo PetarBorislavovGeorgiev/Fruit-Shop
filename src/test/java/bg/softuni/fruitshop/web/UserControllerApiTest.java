@@ -2,6 +2,7 @@ package bg.softuni.fruitshop.web;
 
 
 import bg.softuni.fruitshop.address.repository.AddressRepository;
+import bg.softuni.fruitshop.cartItem.service.CartItemService;
 import bg.softuni.fruitshop.user.model.User;
 import bg.softuni.fruitshop.user.model.UserRole;
 import bg.softuni.fruitshop.user.service.UserService;
@@ -30,8 +31,13 @@ public class UserControllerApiTest {
     @MockitoBean
     private AddressRepository addressRepository;
 
+    @MockitoBean
+    private CartItemService cartItemService;
+
     @Autowired
     private MockMvc mockMvc;
+
+
 
 
     @Test

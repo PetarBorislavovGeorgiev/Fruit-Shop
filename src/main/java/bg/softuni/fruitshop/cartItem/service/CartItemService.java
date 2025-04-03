@@ -149,7 +149,10 @@ public class CartItemService {
                         .build()
         );
 
+    }
 
+    public int getCartItemCount(UUID userId) {
+        return cartItemRepository.countByUserId(userId);
     }
 
 }
